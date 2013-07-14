@@ -51,13 +51,18 @@ printMenu = do
   putStrLn $ (show optionQuit)               ++ "  -  Quit. (exit inventory tracking system)"
   putStrLn "______________________________________________"
 
+promptUser :: String -> IO String
+promptUser message = do
+  putStr message
+  hFlush stdout
+  response <- getLine
+  return response
+
 -- returns an option
 -- reprompts user if input is invalid (unless it's non-numeric, not sure how to deal with that)
 getOption :: IO Integer
 getOption = do
-  putStr optionPrompt
-  hFlush stdout
-  option <- getLine
+  option <- promptUser optionPrompt
   if elem (read option) options
     then return (read option)
     else getOption
@@ -80,13 +85,14 @@ handleOption cars option
       putStrLn "DISPLAY CARS BY PRICE"
       return (cars, False)
   | option == optionDisplayCarsByColor = do
-      putStrLn "DISPLAY CARS BY COLOUR"
+      _color <- promptUser "Enter the color of the car you are searching for: "
+      displayCars $ filter (\car -> color car == _color) cars
       return (cars, False)
   | option == optionDisplayAllCars = do
       displayCars cars
       return (cars, False)
   | option == optionQuit = do
-      putStrLn "QUITTING"
+      putStrLn "Goodbye!"
       return (cars, True)
 
 displayCars :: [Car] -> IO ()
