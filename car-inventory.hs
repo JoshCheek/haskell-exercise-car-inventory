@@ -83,11 +83,18 @@ handleOption cars option
       putStrLn "DISPLAY CARS BY COLOUR"
       return (cars, False)
   | option == optionDisplayAllCars = do
-      putStrLn "DISPLAY ALL CARS"
+      displayCars cars
       return (cars, False)
   | option == optionQuit = do
       putStrLn "QUITTING"
       return (cars, True)
+
+displayCars :: [Car] -> IO ()
+displayCars [] = do return ()
+displayCars (car:remainingCars) = do
+  displayCar car
+  displayCars remainingCars
+  where displayCar car = putStrLn $ show car
 
 readCars :: String -> IO [Car]
 readCars filename = do
