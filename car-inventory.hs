@@ -79,7 +79,8 @@ handleOption cars option
       putStrLn "DISPLAY CAR"
       return (cars, False)
   | option == optionDisplayCarsByYear = do
-      putStrLn "DISPLAY CAS BY YEAR"
+      _year <- promptUser "Enter the year of the car you are searching for: "
+      displayCars $ filter (\car -> year car == read(_year)) cars
       return (cars, False)
   | option == optionDisplayCarsByPrice = do
       putStrLn "DISPLAY CARS BY PRICE"
