@@ -83,7 +83,9 @@ handleOption cars option
       displayCars $ filter (\car -> year car == read(_year)) cars
       return (cars, False)
   | option == optionDisplayCarsByPrice = do
-      putStrLn "DISPLAY CARS BY PRICE"
+      low  <- promptUser "Enter the low end of the price range to search: "
+      high <- promptUser "Enter the low end of the price range to search: "
+      displayCars $ filter (\car -> (read low <= price car) && (price car <= read high)) cars
       return (cars, False)
   | option == optionDisplayCarsByColor = do
       _color <- promptUser "Enter the color of the car you are searching for: "
