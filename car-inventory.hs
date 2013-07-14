@@ -1,5 +1,14 @@
 import System.IO (hFlush, stdout)
 
+optionAddCar             = 1 :: Integer
+optionRemoveCar          = 2 :: Integer
+optionDisplayCar         = 3 :: Integer
+optionDisplayCarsByYear  = 4 :: Integer
+optionDisplayCarsByPrice = 5 :: Integer
+optionDisplayCarsByColor = 6 :: Integer
+optionDisplayAllCars     = 7 :: Integer
+optionQuit               = 8 :: Integer
+
 printMenu :: IO ()
 printMenu = do
   putStrLn "**********************************************"
@@ -10,22 +19,22 @@ printMenu = do
   putStrLn "Please choose from the following options:"
   putStrLn  ""
   putStrLn "______________________________________________"
-  putStrLn "1  -  Add a new car to inventory."
+  putStrLn $ (show optionAddCar)             ++ "  -  Add a new car to inventory."
   putStrLn ""
-  putStrLn "2  -  Remove a sold car from inventory."
+  putStrLn $ (show optionRemoveCar)          ++ "  -  Remove a sold car from inventory."
   putStrLn ""
-  putStrLn "3  -  Display info on car. (inv # needed)"
+  putStrLn $ (show optionDisplayCar)         ++ "  -  Display info on car. (inv # needed)"
   putStrLn ""
-  putStrLn "4  -  Display cars of specific Year."
+  putStrLn $ (show optionDisplayCarsByYear)  ++ "  -  Display cars of specific Year."
   putStrLn ""
-  putStrLn "5  -  Display cars within a price range."
+  putStrLn $ (show optionDisplayCarsByPrice) ++ "  -  Display cars within a price range."
   putStrLn ""
-  putStrLn "6  -  Display cars of specified color."
+  putStrLn $ (show optionDisplayCarsByColor) ++ "  -  Display cars of specified color."
   putStrLn ""
-  putStrLn "7  -  Display All Cars in inventory."
+  putStrLn $ (show optionDisplayAllCars)     ++ "  -  Display All Cars in inventory."
   putStrLn ""
   putStrLn ""
-  putStrLn "8  -  Quit. (exit inventory tracking system)"
+  putStrLn $ (show optionQuit)               ++ "  -  Quit. (exit inventory tracking system)"
   putStrLn "______________________________________________"
 
 getOption :: IO Integer
@@ -37,17 +46,30 @@ getOption = do
 
 handleOption :: Integer -> IO Bool
 handleOption option
-  | option == 1 = do
-    putStrLn "ADDING A NEW CAR"
-    return False
-  | option == 2 = do return False
-  | option == 3 = do return False
-  | option == 4 = do return False
-  | option == 5 = do return False
-  | option == 6 = do return False
-  | option == 7 = do return False
-  | option == 8 = do return True
-  | otherwise   = do return False
+  | option == optionAddCar = do
+      putStrLn "ADD A NEW CAR"
+      return False
+  | option == optionRemoveCar = do
+      putStrLn "REMOVE CAR"
+      return False
+  | option == optionDisplayCar = do
+      putStrLn "DISPLAY CAR"
+      return False
+  | option == optionDisplayCarsByYear = do
+      putStrLn "DISPLAY CAS BY YEAR"
+      return False
+  | option == optionDisplayCarsByPrice = do
+      putStrLn "DISPLAY CARS BY PRICE"
+      return False
+  | option == optionDisplayCarsByColor = do
+      putStrLn "DISPLAY CARS BY COLOUR"
+      return False
+  | option == optionDisplayAllCars = do
+      putStrLn "DISPLAY ALL CARS"
+      return False
+  | option == optionQuit = do
+      putStrLn "QUITTING"
+      return True
 
 main :: IO ()
 main = do
