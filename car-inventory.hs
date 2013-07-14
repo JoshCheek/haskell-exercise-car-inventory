@@ -76,7 +76,8 @@ handleOption cars option
       putStrLn "REMOVE CAR"
       return (cars, False)
   | option == optionDisplayCar = do
-      putStrLn "DISPLAY CAR"
+      _vinNumber <- promptUser "Enter inventory number of the car to display: "
+      displayCars $ filter (\car -> _vinNumber == vinNumber car) cars
       return (cars, False)
   | option == optionDisplayCarsByYear = do
       _year <- promptUser "Enter the year of the car you are searching for: "
