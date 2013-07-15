@@ -25,31 +25,21 @@ optionPrompt             = "Enter your choice (1-8) ===> "
 
 printMenu :: IO ()
 printMenu = do
-  putStrLn "**********************************************"
-  putStrLn "*        Air Capital Automobiles             *"
-  putStrLn "*      (inventory tracking system)           *"
-  putStrLn "**********************************************"
-  putStrLn ""
-  putStrLn "Please choose from the following options:"
-  putStrLn  ""
-  putStrLn "______________________________________________"
-  putStrLn $ (show optionAddCar)             ++ "  -  Add a new car to inventory."
-  putStrLn ""
-  putStrLn $ (show optionRemoveCar)          ++ "  -  Remove a sold car from inventory."
-  putStrLn ""
-  putStrLn $ (show optionDisplayCar)         ++ "  -  Display info on car. (inv # needed)"
-  putStrLn ""
-  putStrLn $ (show optionDisplayCarsByYear)  ++ "  -  Display cars of specific Year."
-  putStrLn ""
-  putStrLn $ (show optionDisplayCarsByPrice) ++ "  -  Display cars within a price range."
-  putStrLn ""
-  putStrLn $ (show optionDisplayCarsByColor) ++ "  -  Display cars of specified color."
-  putStrLn ""
-  putStrLn $ (show optionDisplayAllCars)     ++ "  -  Display All Cars in inventory."
-  putStrLn ""
-  putStrLn ""
-  putStrLn $ (show optionQuit)               ++ "  -  Quit. (exit inventory tracking system)"
-  putStrLn "______________________________________________"
+  putStrLn $ "**********************************************\n"                                 ++
+             "*        Air Capital Automobiles             *\n"                                 ++
+             "*      (inventory tracking system)           *\n"                                 ++
+             "**********************************************\n\n"                               ++
+             "Please choose from the following options:\n\n"                                    ++
+             "______________________________________________\n"                                 ++
+             show optionAddCar             ++ "  -  Add a new car to inventory.\n\n"            ++
+             show optionRemoveCar          ++ "  -  Remove a sold car from inventory.\n\n"      ++
+             show optionDisplayCar         ++ "  -  Display info on car. (inv # needed)\n\n"    ++
+             show optionDisplayCarsByYear  ++ "  -  Display cars of specific Year.\n\n"         ++
+             show optionDisplayCarsByPrice ++ "  -  Display cars within a price range.\n\n"     ++
+             show optionDisplayCarsByColor ++ "  -  Display cars of specified color.\n\n"       ++
+             show optionDisplayAllCars     ++ "  -  Display All Cars in inventory.\n\n\n"       ++
+             show optionQuit               ++ "  -  Quit. (exit inventory tracking system)\n\n" ++
+             "______________________________________________"
 
 promptUser :: String -> IO String
 promptUser message = do
