@@ -1,0 +1,346 @@
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<meta name="Title" content="Your Title">
+<meta name="Author" content="?">
+<meta name="Subject" content="?">
+<meta name="Keywords" content="?">
+<meta name="Description" content="?">
+<meta name="Language" content="English">
+<meta name="Copyright" content="©">
+<meta name="Designer" content="?">
+<meta name="Publisher" content="?">
+<meta name="Distribution" content="Global">
+<meta name="Robots" content="All">
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="MSSmartTagsPreventParsing" content="True">
+
+<title>CS300 - Program 1 - Array Lists</title>
+
+<style type="text/css">
+<!--
+body { color: #000000;
+       font-size: 100%;
+       background-color: #FFFFFF;
+       topmargin:"0px";
+       leftmargin:"0px";
+       overflow: auto;
+       padding: 25px;
+       font-family: Verdana;}
+pre { font-family: "Courier New", Courier, mono; font-size: 12px; color: #000000; background-color: #FFFFCC; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; border: #000000; border-style: dashed; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; width:auto;}
+@media print {
+.cpanl { display: none; }
+}
+.cpanl { border-bottom: double; letter-spacing: 6px; width:300px;}
+.red {color: #FF9900; font-weight: bold}
+.red2 {color: #AA5500; font-weight: bold}
+.blue  {color: #0066FF;}
+.green {color: #003300;}
+.inthesenotes { padding: 5px; border: 1px solid #CFB666; font-weight: bold; color: #000000; background-color: #F1FCED; margin-top: 35px; }
+.inthesenotesh { padding: 5px; border: 1px solid #CFB666; font-weight: bold; color: #000000; background-color: #FBFAFE;  }
+h2 { border-top: double; border-bottom: double; letter-spacing: 6px; font-weight: bold; color: #000000; background-color: #F6E19E; margin-top: 35px; }
+
+-->
+</style>
+</head>
+
+<body>
+
+<h3>CS300 - Program 1 - Array Lists</h3>
+Due Feb 25, 2008<br><br>
+
+<p><span class="inthesenotesh">handin information at the bottom</span>
+
+
+<p><span class="inthesenotesh"> What this program does: </span>
+
+<pre>
+/* This program aids a car business in managing its inventory.
+ * This program reads in file inventory.data and
+ * sorts the information.
+ * It runs interactively during a business day in response to
+ * the needs of the sales personnel.
+ */
+</pre>
+
+It will need a menu for the user to choose from, and only exits when the user selects 8 (Quit)
+
+<pre>
+   1  -  Add a new car to inventory.
+   2  -  Remove a sold car from inventory.
+   3  -  Display info on car. (inv # needed)
+   4  -  Display cars of specific Year.
+   5  -  Display cars within a price range.
+   6  -  Display cars of specified color.
+   7  -  Display All Cars in inventory.
+   8  -  Quit. (exit inventory tracking system)
+</pre>
+
+Remember to break your program into pieces (e.g. make sure that you are reading in the data file correctly, before
+you start sorting, adding, deleting, etc from it in memory)
+<p>
+The output is ONLY to the screen/monitor in this program.  This means that all the changes are done solely in memory, and the actual
+inventory.data file is never actually changed.  (In future programs, I will ask you to either output to another file, or to overwrite the
+inventory.data file ... don't worry about that in this program.)
+<p>
+Use the inventory.data file for your input (it is attached with this assignment).
+<p>
+You are required to divide your program into multiple files.  You need to keep your array_list files seperate from your program1 main files.
+I will provide you with what you need for this program ... in terms of file names and what you should have in the files ...
+future programs, I assume that you can infer what should go into your files.  Here is the list of files you should have:
+<ol>
+<li><b>program1.c</b> your main() code and function definitions not related to array_lists (e.g. void remove_null(char *s))</li><p>
+<li><b>program1.h</b> your function declarations/headers that you have defined in program1.c</li><p>
+<li><b>prog_defs.h</b> your program definitions (macros, structures, #defines), but not specifically the array_list structure</li><p>
+<li><b>array_list.c</b> your array_list function definitions</li><p>
+<li><b>array_list.h</b> your array_list function declarations, your array_list structure</li><p>
+</ol>
+
+<p>
+I have attached the inventory.data file, the prog_defs.h file (you will need to alter this for future programs).
+<p>
+I have attached the starting shell of array_list.c and array_list.h files.  You will need to add any additional or altered function
+declarations and definitions that you deem necessary to complete the tasks of the program (e.g. possibly an altered sequential search
+function that handles ONLY looking for color, or a print_record function).
+
+<p>
+Please notice the #include statements at the top of the files.  You will need to do similar in future programs (e.g. linked lists).
+<p>
+Please review Tips in Debugging your Programs under the Course Tools and Help section.
+<p>
+NOTE:  You will need to alter Sequential Search function so that it can handle multiple records.  Meaning, if user selects #4 from the menu
+(display cars of specific year), the sequential search may find 0 or more cars of that year.  So, you want to be able to handle display multiple
+ car records as it finds all the cars from a specified year.
+<p>
+For menu item 2 and 3 ... inventory number is needed (see the structures and inventory.data).
+
+<p>Example output (NOTE: not all menu items have an example below):
+<pre>
+**********************************************
+*        Air Capital Automobiles             *
+*      (inventory tracking system)           *
+**********************************************
+
+Please choose from the following options:
+
+______________________________________________
+1  -  Add a new car to inventory.
+
+2  -  Remove a sold car from inventory.
+
+3  -  Display info on car. (inv # needed)
+
+4  -  Display cars of specific Year.
+
+5  -  Display cars within a price range.
+
+6  -  Display cars of specified color.
+
+7  -  Display All Cars in inventory.
+
+
+8  -  Quit. (exit inventory tracking system)
+______________________________________________
+Enter your choice (1-8) ===&gt;6
+
+
+
+
+
+
+
+
+Please enter the following info to search for:
+
+Color (ie red): red
+
+Searching for: red
+**********************************************
+*Car records found that match specified Color*
+**********************************************
+Looking for: red
+
+
+1997 Ford Mustang GT
+convertible
+red
+73,700
+N
+1997FORDMU00431
+89995.00
+Xavier Landis
+________________________________
+
+1999 Toyota Corolla CE
+2 door
+red
+67,000
+N
+1999TOYOCO00385
+8950.00
+Zhixi Fang
+________________________________
+
+2000 Chrysler Sebring
+2 door
+red
+37,650
+Y
+2000CHRYSE00419
+9950.00
+Sandy Ampersand
+________________________________
+
+2001 Pontiac Gran Prix SE
+4 door
+red
+42,000
+Y
+2001PONTGR00388
+10995.00
+James Harris
+________________________________
+
+
+ 4 red  cars found in inventory
+
+
+ Done
+
+
+Press enter to return to menu
+
+
+
+
+
+
+
+
+
+
+Please enter the following info to search for:
+
+Minimum Price (ie 12500.00): 8000
+
+Maximum Price (ie 23750.00): 9000
+
+Searching for: Cars priced between 8000.00 and 9000.00
+**********************************************
+*  Car records found that match price range  *
+**********************************************
+
+1999 Mercury Grand Marquis
+4 door
+maroon
+61,700
+Y
+1999MERCGR00401
+8950.00
+Helen Mayfield
+________________________________
+
+1999 Toyota Corolla CE
+4 door
+blue
+75,000
+N
+1999TOYOCO00370
+8550.00
+Donny Edwards
+________________________________
+
+1999 Toyota Corolla CE
+2 door
+red
+67,000
+N
+1999TOYOCO00385
+8950.00
+Zhixi Fang
+________________________________
+
+1999 Volkswagon Beetle
+2 door
+blue
+58,000
+N
+1999VOLKBE00399
+8995.00
+Judy Landers
+________________________________
+
+
+ 4 cars found that match price range in inventory
+
+
+ Done
+
+
+Press enter to return to menu
+
+
+
+
+
+
+
+
+
+
+
+
+Please enter the following info to search for:
+
+Minimum Price (ie 12500.00): 23000
+
+Maximum Price (ie 23750.00): 23500
+
+Searching for: Cars priced between 23000.00 and 23500.00
+**********************************************
+*  Car records found that match price range  *
+**********************************************
+
+
+ 0 cars found that match price range in inventory
+
+
+ No records found in inventory matching
+
+
+Press enter to return to menu
+
+
+</pre>
+
+
+<p><span class="inthesenotesh">TO COMPILE:</span>
+Simply run the attached makefile on the unix systems.
+<pre>
+
+kira&gt; make
+
+
+or if you would like the long way...
+
+kira&gt; gcc -Wall -o program1 program1.c array_list.c
+
+</pre>
+
+(for future programs, you will need to alter the make file (which has UNIX endings))
+<p>type &quot;make -clean&quot; to delete the executable and object files
+
+<p><span class="inthesenotesh">TO HANDIN:</span>
+Your files MUST be on the CS servers and you must be logged in to one of them (kira,kirk,sisko,...)<p>
+
+<br><br><br>
+
+I NEED TO SETUP HANDIN BEFORE I CAN GIVE YOU THE HANDIN COMMAND FOR THIS ASSIGNMENT.  THIS IS THE ONLY TIME THAT THIS
+WILL BE NECESSARY.  I WILL UPDATE THIS AS SOON AS I HAVE THE COMMAND READY FOR YOU.
+
+<br><br><br>
+
+</body>
+</html>
