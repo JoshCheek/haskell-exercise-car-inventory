@@ -50,8 +50,6 @@ promptUser message = do
   response <- getLine
   return response
 
--- returns an option
--- reprompts user if input is invalid (unless it's non-numeric, not sure how to deal with that)
 getOption :: IO Integer
 getOption = do
   option <- promptUser optionPrompt
@@ -73,7 +71,7 @@ promptCar = do
   _vin       <- promptUser "Input inventory number: "
   _price     <- promptUser "Input price: "
   _prevOwner <- promptUser "Input previous owner: "
-  return (Car { year            = read _year
+  return Car { year            = read _year
              , make            = _make
              , model           = _model
              , style           = _style
@@ -83,7 +81,7 @@ promptCar = do
              , vinNumber       = _vin
              , price           = read _price
              , previousOwner   = _prevOwner
-             })
+             }
 
 writeCars :: [Car] -> String -> IO ()
 writeCars cars inventoryFilename = do
