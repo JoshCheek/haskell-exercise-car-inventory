@@ -102,13 +102,13 @@ readCars filename = do
   return $ map carFromData (carData $ lines carFileData)
   where
     carData carFileData
-      | length carFileData < 9 = []
+      | length carFileData < 8 = []
       | otherwise              = [(take 8  $ fst $ splitAt 9 carFileData)] ++
                                   (carData $ snd $ splitAt 9 carFileData)
     carFromData [line1, style, color, miles, ac, vin, price, prevOwner] =
-      Car { year            = read ((words line1) !! 0)
-          , make            =       (words line1) !! 1
-          , model           =       (words line1) !! 2
+      Car { year            = read  ((words line1) !! 0)
+          , make            =        (words line1) !! 1
+          , model           = unwords $ drop 2 (words line1)
           , style           = style
           , color           = color
           , mileage         = miles
