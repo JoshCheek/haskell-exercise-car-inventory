@@ -144,7 +144,15 @@ displayCars [] = do return ()
 displayCars (car:remainingCars) = do
   displayCar car
   displayCars remainingCars
-  where displayCar car = putStrLn $ show car
+  where displayCar car = putStrLn $ (show $ year car) ++ ", " ++ make car ++ ", " ++ model car ++ "\n" ++
+                                    "style: " ++ style car ++ "\n" ++
+                                    "color: " ++ color car ++ "\n" ++
+                                    "miles: " ++ mileage car ++ "\n" ++
+                                    "air conditioning: " ++ (if airConditioner car then "Y" else "N") ++ "\n" ++
+                                    "inventory number: " ++ vinNumber car ++ "\n" ++
+                                    "price: " ++ (show $ price car) ++ "\n" ++
+                                    "previous owner: " ++ previousOwner car ++ "\n" ++
+                                    "________________________________\n\n"
 
 readCars :: String -> IO [Car]
 readCars filename = do
