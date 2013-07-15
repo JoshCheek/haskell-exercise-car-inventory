@@ -1,4 +1,5 @@
-import System.IO (hFlush, stdout, readFile)
+import System.IO (hFlush, stdout, readFile, writeFile)
+import System.Directory (renameFile)
 
 data Car = Car { year           :: Integer
                , make           :: String
@@ -22,6 +23,7 @@ optionDisplayAllCars     = 7 :: Integer
 optionQuit               = 8 :: Integer
 options                  = [optionAddCar, optionRemoveCar, optionDisplayCar, optionDisplayCarsByYear, optionDisplayCarsByPrice, optionDisplayCarsByColor, optionDisplayAllCars, optionQuit]
 optionPrompt             = "Enter your choice (1-8) ===> "
+inventoryFilename        = "inventory.data"
 
 printMenu :: IO ()
 printMenu = do
@@ -57,11 +59,57 @@ getOption = do
     then return (read option)
     else getOption
 
-handleOption :: [Car] -> Integer -> IO ([Car], Bool)
-handleOption cars option
+promptCar :: IO Car
+promptCar = do
+  putStrLn $  "Input data for new car:\n" ++
+              "________________________________\n\n"
+  _year      <- promptUser "Input year: "
+  _make      <- promptUser "Input make: "
+  _model     <- promptUser "Input model: "
+  _style     <- promptUser "Input style: "
+  _color     <- promptUser "Input color: "
+  _miles     <- promptUser "Input mileage: "
+  _ac        <- promptUser "Input air conditioner (y/n): "
+  _vin       <- promptUser "Input inventory number: "
+  _price     <- promptUser "Input price: "
+  _prevOwner <- promptUser "Input previous owner: "
+  return (Car { year            = read _year
+             , make            = _make
+             , model           = _model
+             , style           = _style
+             , color           = _color
+             , mileage         = _miles
+             , airConditioner  = if _ac == "Y" || _ac == "y" then True else False
+             , vinNumber       = _vin
+             , price           = read _price
+             , previousOwner   = _prevOwner
+             })
+
+writeCars :: [Car] -> String -> IO ()
+writeCars cars inventoryFilename = do
+  writeFile tempFilename (showCars cars)
+  renameFile tempFilename inventoryFilename
+  where tempFilename        = inventoryFilename ++ ".tmp"
+        showCars []         = ""
+        showCars (car:cars) =
+          (show $ year car) ++ " " ++ make car ++ " " ++ model car ++ "\n" ++
+          style car ++ "\n" ++
+          color car ++ "\n" ++
+          mileage car ++ "\n" ++
+          (if airConditioner car then "Y" else "N") ++ "\n" ++
+          vinNumber car ++ "\n" ++
+          (show $ price car) ++ "\n" ++
+          previousOwner car ++ "\n\n" ++
+          showCars cars
+
+handleOption :: [Car] -> Integer -> String -> IO ([Car], Bool)
+handleOption cars option inventoryFilename
   | option == optionAddCar = do
-      putStrLn "ADD A NEW CAR"
-      return (cars, False)
+      car <- promptCar
+      putStrLn $ "YOUR CAR: " ++ show car
+      writeCars (car:cars) inventoryFilename
+      putStrLn "Car has been added to inventory"
+      return ((car:cars), False)
   | option == optionRemoveCar = do
       putStrLn "REMOVE CAR"
       return (cars, False)
@@ -118,16 +166,16 @@ readCars filename = do
           , previousOwner   = prevOwner
           }
 
-menuLoop :: [Car] -> IO ()
-menuLoop cars = do
+menuLoop :: [Car] -> String -> IO ()
+menuLoop cars inventoryFilename = do
   printMenu
   option <- getOption
-  (newCars, shouldQuit) <- handleOption cars option
+  (newCars, shouldQuit) <- handleOption cars option inventoryFilename
   if shouldQuit
     then return ()
-    else menuLoop newCars
+    else menuLoop newCars inventoryFilename
 
 main :: IO ()
 main = do
-  cars <- readCars "inventory.data"
-  menuLoop cars
+  cars <- readCars inventoryFilename
+  menuLoop cars inventoryFilename
