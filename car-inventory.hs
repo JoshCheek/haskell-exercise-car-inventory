@@ -111,8 +111,10 @@ handleOption cars option inventoryFilename
       putStrLn "Car has been added to inventory"
       return ((car:cars), False)
   | option == optionRemoveCar = do
-      putStrLn "REMOVE CAR"
-      return (cars, False)
+      _vinNumber <- promptUser "Enter inventory number of the car to remove: "
+      let newCars = filter (\car -> _vinNumber /= vinNumber car) cars
+      writeCars newCars inventoryFilename
+      return (newCars, False)
   | option == optionDisplayCar = do
       _vinNumber <- promptUser "Enter inventory number of the car to display: "
       displayCars $ filter (\car -> _vinNumber == vinNumber car) cars
