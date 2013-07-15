@@ -47,8 +47,7 @@ promptUser :: String -> IO String
 promptUser message = do
   putStr message
   hFlush stdout
-  response <- getLine
-  return response
+  getLine
 
 getOption :: IO Integer
 getOption = do
@@ -102,38 +101,38 @@ writeCars cars inventoryFilename = do
 
 handleOption :: [Car] -> Integer -> String -> IO ([Car], Bool)
 handleOption cars option inventoryFilename
-  | option == optionAddCar = do
+  | optionAddCar == option = do
       car <- promptCar
       putStrLn $ "YOUR CAR: " ++ show car
       writeCars (car:cars) inventoryFilename
       putStrLn "Car has been added to inventory"
       return ((car:cars), False)
-  | option == optionRemoveCar = do
+  | optionRemoveCar == option = do
       _vinNumber <- promptUser "Enter inventory number of the car to remove: "
       let newCars = filter (\car -> _vinNumber /= vinNumber car) cars
       writeCars newCars inventoryFilename
       return (newCars, False)
-  | option == optionDisplayCar = do
+  | optionDisplayCar == option = do
       _vinNumber <- promptUser "Enter inventory number of the car to display: "
       displayCars $ filter (\car -> _vinNumber == vinNumber car) cars
       return (cars, False)
-  | option == optionDisplayCarsByYear = do
+  | optionDisplayCarsByYear == option = do
       _year <- promptUser "Enter the year of the car you are searching for: "
       displayCars $ filter (\car -> year car == read(_year)) cars
       return (cars, False)
-  | option == optionDisplayCarsByPrice = do
+  | optionDisplayCarsByPrice == option = do
       low  <- promptUser "Enter the low end of the price range to search: "
       high <- promptUser "Enter the low end of the price range to search: "
       displayCars $ filter (\car -> (read low <= price car) && (price car <= read high)) cars
       return (cars, False)
-  | option == optionDisplayCarsByColor = do
+  | optionDisplayCarsByColor == option = do
       _color <- promptUser "Enter the color of the car you are searching for: "
       displayCars $ filter (\car -> color car == _color) cars
       return (cars, False)
-  | option == optionDisplayAllCars = do
+  | optionDisplayAllCars == option = do
       displayCars cars
       return (cars, False)
-  | option == optionQuit = do
+  | optionQuit == option = do
       putStrLn "Goodbye!"
       return (cars, True)
 
