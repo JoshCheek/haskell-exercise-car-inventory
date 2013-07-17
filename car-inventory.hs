@@ -1,5 +1,7 @@
 import System.IO (hFlush, stdout, readFile, writeFile)
 import System.Directory (renameFile)
+import Data.Aeson
+import Data.Text (pack, unpack)
 
 data Car = Car { year           :: Integer
                , make           :: String
@@ -13,6 +15,19 @@ data Car = Car { year           :: Integer
                , previousOwner  :: String
                } deriving Show
 
+instance ToJSON Car where
+  toJSON (Car year make model style color mileage airConditioner vinNumber price previousOwner) =
+    object [(pack "year"          ) .= year,
+            (pack "make"          ) .= make,
+            (pack "model"         ) .= model,
+            (pack "style"         ) .= style,
+            (pack "color"         ) .= color,
+            (pack "mileage"       ) .= mileage,
+            (pack "airConditioner") .= airConditioner,
+            (pack "vinNumber"     ) .= vinNumber,
+            (pack "price"         ) .= price,
+            (pack "previousOwner" ) .= previousOwner]
+
 optionAddCar             = 1 :: Integer
 optionRemoveCar          = 2 :: Integer
 optionDisplayCar         = 3 :: Integer
@@ -20,9 +35,10 @@ optionDisplayCarsByYear  = 4 :: Integer
 optionDisplayCarsByPrice = 5 :: Integer
 optionDisplayCarsByColor = 6 :: Integer
 optionDisplayAllCars     = 7 :: Integer
-optionQuit               = 8 :: Integer
-options                  = [optionAddCar, optionRemoveCar, optionDisplayCar, optionDisplayCarsByYear, optionDisplayCarsByPrice, optionDisplayCarsByColor, optionDisplayAllCars, optionQuit]
-optionPrompt             = "Enter your choice (1-8) ===> "
+optionToJson             = 8 :: Integer
+optionQuit               = 9 :: Integer
+options                  = [optionAddCar, optionRemoveCar, optionDisplayCar, optionDisplayCarsByYear, optionDisplayCarsByPrice, optionDisplayCarsByColor, optionDisplayAllCars, optionToJson, optionQuit]
+optionPrompt             = "Enter your choice (1-9) ===> "
 inventoryFilename        = "inventory.data"
 
 printMenu :: IO ()
@@ -39,7 +55,8 @@ printMenu = do
              show optionDisplayCarsByYear  ++ "  -  Display cars of specific Year.\n\n"         ++
              show optionDisplayCarsByPrice ++ "  -  Display cars within a price range.\n\n"     ++
              show optionDisplayCarsByColor ++ "  -  Display cars of specified color.\n\n"       ++
-             show optionDisplayAllCars     ++ "  -  Display All Cars in inventory.\n\n\n"       ++
+             show optionDisplayAllCars     ++ "  -  Display All Cars in inventory.\n\n"         ++
+             show optionToJson             ++ "  -  Display All Cars as JSON.\n\n\n"            ++
              show optionQuit               ++ "  -  Quit. (exit inventory tracking system)\n\n" ++
              "______________________________________________"
 
@@ -131,6 +148,9 @@ handleOption cars option inventoryFilename
       return (cars, False)
   | optionDisplayAllCars == option = do
       displayCars cars
+      return (cars, False)
+  | optionToJson == option = do
+      putStrLn $ read $ show $ encode cars
       return (cars, False)
   | optionQuit == option = do
       putStrLn "Goodbye!"
