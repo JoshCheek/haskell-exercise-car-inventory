@@ -204,7 +204,7 @@ readCars filename = do
       | otherwise              = [(take 8  $ fst $ splitAt 9 carFileData)] ++
                                   (carData $ snd $ splitAt 9 carFileData)
     carFromData [line1, style, color, miles, ac, vin, price, prevOwner] =
-      Car { year            = read  ((words line1) !! 0) -- HERE
+      Car { year            = read  ((words line1) !! 0)
           , make            =        (words line1) !! 1
           , model           = unwords $ drop 2 (words line1)
           , style           = style
@@ -212,7 +212,7 @@ readCars filename = do
           , mileage         = miles
           , airConditioner  = if ac == "Y" then True else False
           , vinNumber       = vin
-          , price           = read price -- HERE
+          , price           = read price
           , previousOwner   = prevOwner
           }
 
