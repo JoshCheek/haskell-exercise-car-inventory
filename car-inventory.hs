@@ -1,6 +1,7 @@
 import System.IO (hFlush, stdout, readFile, writeFile)
 import System.Directory (renameFile)
 import Data.Aeson
+import Safe (readDef, readMay)
 import Data.Text (pack, unpack)
 
 data Car = Car { year           :: Integer
@@ -28,16 +29,17 @@ instance ToJSON Car where
             (pack "price"         ) .= price,
             (pack "previousOwner" ) .= previousOwner]
 
-optionAddCar             = 1 :: Integer
-optionRemoveCar          = 2 :: Integer
-optionDisplayCar         = 3 :: Integer
-optionDisplayCarsByYear  = 4 :: Integer
-optionDisplayCarsByPrice = 5 :: Integer
-optionDisplayCarsByColor = 6 :: Integer
-optionDisplayAllCars     = 7 :: Integer
-optionToJson             = 8 :: Integer
-optionQuit               = 9 :: Integer
-options                  = [optionAddCar, optionRemoveCar, optionDisplayCar, optionDisplayCarsByYear, optionDisplayCarsByPrice, optionDisplayCarsByColor, optionDisplayAllCars, optionToJson, optionQuit]
+optionAddCar             = 1  :: Integer
+optionRemoveCar          = 2  :: Integer
+optionDisplayCar         = 3  :: Integer
+optionDisplayCarsByYear  = 4  :: Integer
+optionDisplayCarsByPrice = 5  :: Integer
+optionDisplayCarsByColor = 6  :: Integer
+optionDisplayAllCars     = 7  :: Integer
+optionToJson             = 8  :: Integer
+optionQuit               = 9  :: Integer
+optionRepeat             = 10 :: Integer
+options                  = [optionAddCar, optionRemoveCar, optionDisplayCar, optionDisplayCarsByYear, optionDisplayCarsByPrice, optionDisplayCarsByColor, optionDisplayAllCars, optionToJson, optionQuit, optionRepeat]
 optionPrompt             = "Enter your choice (1-9) ===> "
 inventoryFilename        = "inventory.data"
 
@@ -60,34 +62,52 @@ printMenu = do
              show optionQuit               ++ "  -  Quit. (exit inventory tracking system)\n\n" ++
              "______________________________________________"
 
-promptUser :: String -> IO String
-promptUser message = do
+promptUserString :: String -> IO String
+promptUserString message = do
   putStr message
   hFlush stdout
   getLine
 
+promptUserInteger :: String -> IO Integer
+promptUserInteger message = do
+  putStr message
+  hFlush stdout
+  response <- getLine
+  case readMay response of
+    Just value -> return value
+    Nothing    -> promptUserInteger message
+
+promptUserDouble :: String -> IO Double
+promptUserDouble message = do
+  putStr message
+  hFlush stdout
+  response <- getLine
+  case readMay response of
+    Just value -> return value
+    Nothing    -> promptUserDouble message
+
 getOption :: IO Integer
 getOption = do
-  option <- promptUser optionPrompt
-  if elem (read option) options
-    then return (read option)
+  option <- promptUserString optionPrompt
+  if elem (readDef optionRepeat option) options
+    then return (readDef optionRepeat option)
     else getOption
 
 promptCar :: IO Car
 promptCar = do
   putStrLn $  "Input data for new car:\n" ++
               "________________________________\n\n"
-  _year      <- promptUser "Input year: "
-  _make      <- promptUser "Input make: "
-  _model     <- promptUser "Input model: "
-  _style     <- promptUser "Input style: "
-  _color     <- promptUser "Input color: "
-  _miles     <- promptUser "Input mileage: "
-  _ac        <- promptUser "Input air conditioner (y/n): "
-  _vin       <- promptUser "Input inventory number: "
-  _price     <- promptUser "Input price: "
-  _prevOwner <- promptUser "Input previous owner: "
-  return Car { year            = read _year
+  _year      <- promptUserInteger "Input year: "
+  _make      <- promptUserString  "Input make: "
+  _model     <- promptUserString  "Input model: "
+  _style     <- promptUserString  "Input style: "
+  _color     <- promptUserString  "Input color: "
+  _miles     <- promptUserString  "Input mileage: "
+  _ac        <- promptUserString  "Input air conditioner (y/n): "
+  _vin       <- promptUserString  "Input inventory number: "
+  _price     <- promptUserDouble  "Input price: "
+  _prevOwner <- promptUserString  "Input previous owner: "
+  return Car { year            = _year
              , make            = _make
              , model           = _model
              , style           = _style
@@ -95,7 +115,7 @@ promptCar = do
              , mileage         = _miles
              , airConditioner  = if _ac == "Y" || _ac == "y" then True else False
              , vinNumber       = _vin
-             , price           = read _price
+             , price           = _price
              , previousOwner   = _prevOwner
              }
 
@@ -125,25 +145,25 @@ handleOption cars option inventoryFilename
       putStrLn "Car has been added to inventory"
       return ((car:cars), False)
   | optionRemoveCar == option = do
-      _vinNumber <- promptUser "Enter inventory number of the car to remove: "
+      _vinNumber <- promptUserString "Enter inventory number of the car to remove: "
       let newCars = filter (\car -> _vinNumber /= vinNumber car) cars
       writeCars newCars inventoryFilename
       return (newCars, False)
   | optionDisplayCar == option = do
-      _vinNumber <- promptUser "Enter inventory number of the car to display: "
+      _vinNumber <- promptUserString "Enter inventory number of the car to display: "
       displayCars $ filter (\car -> _vinNumber == vinNumber car) cars
       return (cars, False)
   | optionDisplayCarsByYear == option = do
-      _year <- promptUser "Enter the year of the car you are searching for: "
-      displayCars $ filter (\car -> year car == read(_year)) cars
+      _year <- promptUserInteger "Enter the year of the car you are searching for: "
+      displayCars $ filter (\car -> year car == _year) cars
       return (cars, False)
   | optionDisplayCarsByPrice == option = do
-      low  <- promptUser "Enter the low end of the price range to search: "
-      high <- promptUser "Enter the low end of the price range to search: "
-      displayCars $ filter (\car -> (read low <= price car) && (price car <= read high)) cars
+      low  <- promptUserDouble "Enter the low end of the price range to search: "
+      high <- promptUserDouble "Enter the low end of the price range to search: "
+      displayCars $ filter (\car -> (low <= price car) && (price car <= high)) cars
       return (cars, False)
   | optionDisplayCarsByColor == option = do
-      _color <- promptUser "Enter the color of the car you are searching for: "
+      _color <- promptUserString "Enter the color of the car you are searching for: "
       displayCars $ filter (\car -> color car == _color) cars
       return (cars, False)
   | optionDisplayAllCars == option = do
@@ -155,6 +175,9 @@ handleOption cars option inventoryFilename
   | optionQuit == option = do
       putStrLn "Goodbye!"
       return (cars, True)
+  | otherwise = do
+      return (cars, False)
+
 
 displayCars :: [Car] -> IO ()
 displayCars [] = do return ()
@@ -181,7 +204,7 @@ readCars filename = do
       | otherwise              = [(take 8  $ fst $ splitAt 9 carFileData)] ++
                                   (carData $ snd $ splitAt 9 carFileData)
     carFromData [line1, style, color, miles, ac, vin, price, prevOwner] =
-      Car { year            = read  ((words line1) !! 0)
+      Car { year            = read  ((words line1) !! 0) -- HERE
           , make            =        (words line1) !! 1
           , model           = unwords $ drop 2 (words line1)
           , style           = style
@@ -189,7 +212,7 @@ readCars filename = do
           , mileage         = miles
           , airConditioner  = if ac == "Y" then True else False
           , vinNumber       = vin
-          , price           = read price
+          , price           = read price -- HERE
           , previousOwner   = prevOwner
           }
 
