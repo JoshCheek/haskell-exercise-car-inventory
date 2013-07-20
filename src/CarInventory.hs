@@ -1,4 +1,4 @@
-import Car
+import Car.Car
 import System.IO (hFlush, stdout, readFile, writeFile)
 import System.Directory (renameFile)
 import Safe (readDef, readMay)

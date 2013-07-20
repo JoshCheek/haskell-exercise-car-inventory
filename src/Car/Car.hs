@@ -1,4 +1,4 @@
-module Car where
+module Car.Car where
 import Data.Aeson
 import Data.Text (pack, unpack)
 
